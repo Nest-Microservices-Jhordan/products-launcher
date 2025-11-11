@@ -14,6 +14,15 @@ services:
     volumes:
       - ./client-gateway/src:/usr/src/app/src
     command: npm run start:dev
+    # develop:
+    #   watch:
+    #     - action: sync+restart
+    #       path: ./client-gateway/src
+    #       target: /usr/src/app/src
+    #       ignore:
+    #         - node_modules/**
+    #     - action: rebuild
+    #       path: package.json
     environment:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
@@ -21,9 +30,18 @@ services:
   products-ms:
     build: ./products-ms
     volumes:
-      - ./products-ms:/src:/usr/src/app
+      - ./products-ms/src:/usr/src/app/src
       - /usr/src/app/node_modules
     command: npm run start:dev
+    # develop:
+    #   watch:
+    #     - action: sync+restart
+    #       path: ./products-ms/src
+    #       target: /usr/src/app/src
+    #       ignore:
+    #         - node_modules/**
+    #     - action: rebuild
+    #       path: package.json
     environment:
       - PORT=3001
       - NATS_SERVERS=nats://nats-server:4222
@@ -36,6 +54,15 @@ services:
     volumes:
       - ./orders-ms/src:/usr/src/app/src
     command: npm run start:dev
+    # develop:
+    #   watch:
+    #     - action: sync+restart
+    #       path: ./orders-ms/src
+    #       target: /usr/src/app/src
+    #       ignore:
+    #         - node_modules/**
+    #     - action: rebuild
+    #       path: package.json
     environment:
       - PORT=3002
       - NATS_SERVERS=nats://nats-server:4222
@@ -48,7 +75,7 @@ services:
     volumes:
       - ./orders-ms/postgres:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
@@ -63,6 +90,15 @@ services:
     volumes:
       - ./payments-ms/src:/usr/src/app/src
     command: npm run start:dev
+    # develop:
+    #   watch:
+    #     - action: sync+restart
+    #       path: ./payments-ms/src
+    #       target: /usr/src/app/src
+    #       ignore:
+    #         - node_modules/**
+    #     - action: rebuild
+    #       path: package.json
     ports:
       - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
     environment:
