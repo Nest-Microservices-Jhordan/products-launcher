@@ -9,10 +9,14 @@ on:
 
 jobs:
   call_build_and_push:
-    uses: ./.github/workflows/build-microservice.yml
-    with:
-      service_name: jhordanfw/image-ms-registry:orders-ms # Name for the Docker Hub repo (e.g., jhordanfw/orders-ms)
-      dockerfile_path: orders-ms/dockerfile.prod
-      build_args: | # Pass the specific DB secret as a build arg
-        DATABASE_URL=${{ secrets.ORDERS_DB_URL }}
-    secrets: inherit # Pass Docker Hub credentials
+    runs-on: ubuntu-latest
+    env:
+      ORDERS_DB_URL: ${{ secrets.ORDERS_DB_URL }}
+    steps:
+      - name: Call the reusable workflow
+        uses: ./.github/workflows/build-microservice.yml@main
+        with:
+          service_name: auth-ms
+          dockerfile_path: auth-ms/dockerfile.prod
+          build_args: |
+            DATABASE_URL=${{ env.ORDERS_DB_URL }}
