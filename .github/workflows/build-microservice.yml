@@ -1,0 +1,54 @@
+name: Build and Push Microservice Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      service_name:
+        required: true
+        type: string
+      dockerfile_path:
+        required: true
+        type: string
+      build_args: # Input to accept dynamic build arguments like DB URLs
+        required: false
+        type: string
+    secrets:
+      DOCKER_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.service_name }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: . # Use the root as context to access submodules
+          file: ${{ inputs.dockerfile_path }} # Specify the path to the service's Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: ${{ inputs.build_args }} # Pass the dynamic arguments

@@ -1,0 +1,20 @@
+name: CI/CD Payments Microservice
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "payments-ms/**"
+
+jobs:
+  call_build_and_push:
+    uses: ./.github/workflows/build-microservice.yml
+    with:
+      service_name: jhordanfw/image-ms-registry:payments-ms
+      dockerfile_path: payments-ms/dockerfile.prod
+      # Add build args here if needed by a build step in the Dockerfile
+      # build_args: |
+      #   STRIPE_SECRET=${{ secrets.STRIPE_SECRET }}
+      #   ... other stripe secrets
+    secrets: inherit

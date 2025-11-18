@@ -1,0 +1,16 @@
+name: CI/CD Client Gateway
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "client-gateway/**"
+
+jobs:
+  call_build_and_push:
+    uses: ./.github/workflows/build-microservice.yml
+    with:
+      service_name: jhordanfw/image-ms-registry:client-gateway
+      dockerfile_path: client-gateway/dockerfile.prod
+    secrets: inherit

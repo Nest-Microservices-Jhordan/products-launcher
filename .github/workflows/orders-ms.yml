@@ -1,0 +1,18 @@
+name: CI/CD Orders Microservice
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "orders-ms/**"
+
+jobs:
+  call_build_and_push:
+    uses: ./.github/workflows/build-microservice.yml
+    with:
+      service_name: jhordanfw/image-ms-registry:orders-ms # Name for the Docker Hub repo (e.g., jhordanfw/orders-ms)
+      dockerfile_path: orders-ms/dockerfile.prod
+      build_args: | # Pass the specific DB secret as a build arg
+        DATABASE_URL=${{ secrets.ORDERS_DB_URL }}
+    secrets: inherit # Pass Docker Hub credentials
