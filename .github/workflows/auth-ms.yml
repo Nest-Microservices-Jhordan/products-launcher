@@ -11,7 +11,7 @@ jobs:
   call_build_and_push:
     runs-on: ubuntu-latest # Need to define runner here for the env var
     env:
-      AUTH_DB_URL_SECRET: ${{ secrets.AUTH_DB_URL }} # Store secret in an environment variable
+      AUTH_DB_URL_SECRET: ${{secrets.AUTH_DB_URL}} # Store secret in an environment variable
     steps:
       - name: Call the reusable workflow
         uses: ./.github/workflows/build-microservice.yml@main
@@ -19,4 +19,4 @@ jobs:
           service_name: auth-ms
           dockerfile_path: auth-ms/dockerfile.prod
           build_args: |
-            DATABASE_URL=${{ env.AUTH_DB_URL_SECRET }} # Access it via env context
+            DATABASE_URL=${{env.AUTH_DB_URL_SECRET}} # Access it via env context

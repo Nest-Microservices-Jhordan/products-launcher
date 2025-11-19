@@ -11,7 +11,7 @@ jobs:
   call_build_and_push:
     runs-on: ubuntu-latest
     env:
-      ORDERS_DB_URL: ${{ secrets.ORDERS_DB_URL }}
+      ORDERS_DB_URL: ${{secrets.ORDERS_DB_URL}}
     steps:
       - name: Call the reusable workflow
         uses: ./.github/workflows/build-microservice.yml@main
@@ -19,4 +19,4 @@ jobs:
           service_name: auth-ms
           dockerfile_path: auth-ms/dockerfile.prod
           build_args: |
-            DATABASE_URL=${{ env.ORDERS_DB_URL }}
+            DATABASE_URL=${{env.ORDERS_DB_URL}}
